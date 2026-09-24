@@ -27,9 +27,6 @@
 	{./chapters/appendix_A/assets/images/}%
 }
 
-\newboolean{isCompiledFromMain}
-\setboolean{isCompiledFromMain}{true}
-
 % arara:  pdflatex: { shell: yes }
 % arara:  latexmk: { clean: partial }
 \begin{document}
@@ -40,7 +37,7 @@
 	\tableofcontents
 
 \mainmatter
-
+    
 	\import{./chapters/preface}{preface}
 	\import{./chapters/01/}{chapter01}
 	\import{./chapters/02/}{chapter02}

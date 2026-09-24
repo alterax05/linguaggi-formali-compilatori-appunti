@@ -4,9 +4,6 @@
 \usepackage{csquotes}
 \graphicspath{{./assets/images/}}
 
-\provideboolean{isCompiledFromMain}
-\setboolean{isCompiledFromMain}{false}
-
 % arara: pdflatex: { synctex: yes, shell: yes }
 % arara: latexmk: { clean: partial }
 \begin{document}
@@ -33,19 +30,9 @@ Il mestiere dell'analizzatore lessicale è proprio quello di ricevere in input u
 % L’analizzatore lessicale lavora in tandem (pipeline) con l’analizzatore sintattico per non si sa bene come o perché
 \subsection{Esempio: la grammatica di C99}
 Andiamo a vedere da vicino la grammatica di un reale linguaggio, anzi, del linguaggio preferito di tutti noi, ossia il C (nella versione \(99\), scritta per il parser \emph{Bison}); il lettore interessato ad approfondire può trovare lo stesso file al seguente indirizzo: \url{http://www.quut.com/c/ANSI-C-grammar-y-1999.html}. Andiamo a vedere un frammento di quel codice:
-\ifthenelse{\boolean{isCompiledFromMain}}{%
-\inputminted[firstline = 17, lastline = 22, linenos, breaklines, tabsize = 2]{c}{chapters/06/assets/resources/c99.y}%
-}{%
-\inputminted[firstline = 17, lastline = 22, linenos, breaklines, tabsize = 2]{c}{assets/resources/c99.y}%
-}
-% \begin{minted}[breaklines, tabsize = 2]{c}
-%     primary_expression
-%         : IDENTIFIER
-%         | CONSTANT
-%         | STRING_LITERAL
-%         | '(' expression ')'
-%         ;
-% \end{minted}
+
+\inputminted[firstline = 17, lastline = 22, linenos, breaklines, tabsize = 2]{c}{assets/resources/c99.y}
+
 Notiamo subito alcune differenze rispetto alla notazione che abbiamo impiegato finora: 
 \begin{itemize}
     \item la freccia ( \(\to\) ) è rappresentata da un altro simbolo, i due punti ( \(:\) );
@@ -56,38 +43,12 @@ Notiamo subito alcune differenze rispetto alla notazione che abbiamo impiegato f
 
 Questo file, inoltre, è pensato per essere utilizzato in tandem con un analizzatore sintattico; per questo motivo, nell'intestazione dello stesso possiamo trovare le dichiarazione di quelli che sono i token (vale a dire, lo ripetiamo, i terminali della grammatica descritta). La forma con cui saranno espressi è rappresentata dal listato di codice sottostante:
 
-\ifthenelse{\boolean{isCompiledFromMain}}{%
-\inputminted[lastline = 12, linenos, breaklines, tabsize = 2, fontsize = \small]{c}{chapters/06/assets/resources/c99.y}%
-}{%
-\inputminted[lastline = 12, linenos, breaklines, tabsize = 2, fontsize = \small]{c}{assets/resources/c99.y}%
-}
-% \begin{minted}[linenos, breaklines, tabsize = 2]{c}
-% %token IDENTIFIER CONSTANT STRING_LITERAL SIZEOF
-% %token PTR_OP INC_OP DEC_OP LEFT_OP RIGHT_OP LE_OP GE_OP EQ_OP NE_OP
-% %token AND_OP OR_OP MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN ADD_ASSIGN
-% %token SUB_ASSIGN LEFT_ASSIGN RIGHT_ASSIGN AND_ASSIGN
-% %token XOR_ASSIGN OR_ASSIGN TYPE_NAME
-
-% %token TYPEDEF EXTERN STATIC AUTO REGISTER INLINE RESTRICT
-% %token CHAR SHORT INT LONG SIGNED UNSIGNED FLOAT DOUBLE CONST VOLATILE VOID
-% %token BOOL COMPLEX IMAGINARY
-% %token STRUCT UNION ENUM ELLIPSIS
-
-% %token CASE DEFAULT IF ELSE SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN
-% \end{minted}
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=.7\textwidth,keepaspectratio]{c99-ex2}
-%     \caption{}
-%     \label{token_c99}
-% \end{figure}
+\inputminted[lastline = 12, linenos, breaklines, tabsize = 2, fontsize = \small]{c}{assets/resources/c99.y}
 
 Un'altra cosa che possiamo osservare è la dichiarazione di quello che è lo starting symbol della grammatica:
-\ifthenelse{\boolean{isCompiledFromMain}}{%
-\inputminted[firstline = 14, lastline = 14, linenos, breaklines, tabsize = 2]{c}{chapters/06/assets/resources/c99.y}%
-}{%
-\inputminted[firstline = 14, lastline = 14, linenos, breaklines, tabsize = 2]{c}{assets/resources/c99.y}%
-}
+
+\inputminted[firstline = 14, lastline = 14, linenos, breaklines, tabsize = 2]{c}{assets/resources/c99.y}
+
 Questa dichiarazione in realtà potrebbe non essere presente su alcuni file contenenti grammatiche, dal momento che, in sua assenza, non otteniamo degli errori, bensì viene preso il non-letterale della prima produzione listata a seguito come starting symbol.
 
 
@@ -250,17 +211,8 @@ Facciamo un breve riepilogo di quanto abbiamo visto: tutti i file predisposti pe
 \end{minted}
 
 \subsection*{file0.l}
-\ifthenelse{\boolean{isCompiledFromMain}}{%
-\inputminted[linenos, breaklines, tabsize = 2]{c}{chapters/06/assets/code-fragments/file0.l}%
-}{%
-\inputminted[linenos, breaklines, tabsize = 2]{c}{assets/code-fragments/file0.l}%
-}
-% \begin{figure}[h]
-%     \centering
-%     \includegraphics[width=.7\textwidth,keepaspectratio]{file0.l.png}
-%     \caption{file0.l}
-%     \label{file0.l}
-% \end{figure}
+
+\inputminted[linenos, breaklines, tabsize = 2]{c}{assets/code-fragments/file0.l}
 
 In qusto primo esempio vediamo che nel preambolo non sono presenti né delle \texttt{define} né del codice; dal momento che non sono presenti routine inserite dall'utente, verrà invocata la procedura \texttt{yylex()} all'esecuzione. Basandoci sulla sintassi di Flex vista precedentemente, andiamo ad analizzare la parte centrale costituita da una sola coppia pattern-azione:
 \begin{itemize}
@@ -276,18 +228,8 @@ In sostanza, questo file farà sì che, nella lettura, qualsiasi carattere incon
 Possiamo notare anche un'altra cosa molto interessante: solitamente, per poter utilizzare lo standard output nei programmi C, è necessario includere all'interno del file la libreria \mintinline{c}{stdio.h}, ma nel \texttt{file0.l} non vi è nemmeno l'ombra di un inlcude: è lo stesso Flex a occuparsi di aggiungere in un secondo momento tutti i dettagli necessari per la gestione dell'output.
 
 \subsection*{file1.l}
-\ifthenelse{\boolean{isCompiledFromMain}}{%
-\inputminted[linenos, breaklines, tabsize = 2]{c}{chapters/06/assets/code-fragments/file1.l}%
-}{%
-\inputminted[linenos, breaklines, tabsize = 2]{c}{assets/code-fragments/file1.l}%
-}
 
-% \begin{figure}[h]
-%     \centering
-%     \includegraphics[width=.7\textwidth,keepaspectratio]{file1.l.png}
-%     \caption{file1.l}
-%     \label{file1.l}
-% \end{figure}
+\inputminted[linenos, breaklines, tabsize = 2]{c}{assets/code-fragments/file1.l}%
 
 \paragraph{Preambolo}
 Diversamente dall'esempio precedente, in questo \texttt{file1.l} abbiamo del contenuto nel preambolo. Andiamo a vederlo nel dettaglio:
@@ -311,18 +253,7 @@ Complessivamente, il risultato ottenuto dall'esecuzione di un programma compilat
 
 \subsection*{file2.l}
 
-\ifthenelse{\boolean{isCompiledFromMain}}{%
-\inputminted[linenos, breaklines, tabsize = 2]{c}{chapters/06/assets/code-fragments/file2.l}%
-}{%
 \inputminted[linenos, breaklines, tabsize = 2]{c}{assets/code-fragments/file2.l}%
-}
-
-% \begin{figure}[h]
-%     \centering
-%     \includegraphics[width=.7\textwidth,keepaspectratio]{file2.l.png}
-%     \caption{file2.l}
-%     \label{file2.l}
-% \end{figure}
 
 \paragraph{Preambolo}
 In questo esempio, invece, troviamo finalmente del codice C nel preambolo; in particolare, troviamo la dichiarazione di un intero chiamato \texttt{lineno} ed inizializzato al valore \(1\). 
@@ -350,18 +281,8 @@ Allora otterremmo in output:
 
 
 \subsection*{file3.l}
-\ifthenelse{\boolean{isCompiledFromMain}}{%
-\inputminted[linenos, breaklines, tabsize = 2, fontsize = \small]{c}{chapters/06/assets/code-fragments/file3.l}%
-}{%
-\inputminted[linenos, breaklines, tabsize = 2, fontsize = \small]{c}{assets/code-fragments/file3.l}%
-}
 
-% \begin{figure}[h]
-%     \centering
-%     \includegraphics[width=.7\textwidth,keepaspectratio]{file3.l.jpg}
-%     \caption{file3.l}
-%     \label{file3.l}
-% \end{figure}
+\inputminted[linenos, breaklines, tabsize = 2, fontsize = \small]{c}{assets/code-fragments/file3.l}
 
 In questo quarto esercizio andiamo a combinare quanto visto precedentemente, aggiungendo anche una routine custom scrivendo del codice ad hoc nell'epilogo del file.
 
@@ -380,11 +301,9 @@ Nella parte centrale del file abbiamo invece le seguenti associazioni pattern-az
 In sostanza, il programma che stiamo descrivendo con questi pattern si occupa di contare complessivamente quanti caratteri, parole e righe sono state individuate in un dato testo; qualora avessimo un match con una parola, allora avviene un incremento proporzionale al numero di caratteri che costituiscono quella stessa parola e, inoltre, si aggiorna il numero di parole totali che sono contenute nel testo; ogni volta che si trova una new line si incrementano di un'unità il numero di righe e di caratteri e, infine, ogni volta che si trova uno spazio o un tab viene incrementato solamente il numero di caratteri. 
 
 \subsection*{file4.l} 
-\ifthenelse{\boolean{isCompiledFromMain}}{%
-\inputminted[linenos, breaklines, tabsize = 2, fontsize = \small]{c}{chapters/06/assets/code-fragments/file4.l}%
-}{%
-\inputminted[linenos, breaklines, tabsize = 2, fontsize = \small]{c}{assets/code-fragments/file4.l}%
-}
+
+\inputminted[linenos, breaklines, tabsize = 2, fontsize = \small]{c}{assets/code-fragments/file4.l}
+
 \noindent L'ultimo esempio proposto fa uso di quanto discusso fino ad ora per analizzare un \texttt{csv} e restituire i dati sotto forma di una tabella in formato \texttt{html}; inoltre, potremo osservare un'implementazione del longest match.
 
 \paragraph{Preambolo}
