@@ -1,0 +1,2 @@
+Placeholder to keep the TikZ externalization cache directory tracked.
+Externalized figures (*.pdf, *.md5, *.log, *.dpth) are generated here on compilation.

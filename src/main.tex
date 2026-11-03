@@ -9,6 +9,9 @@
 \usepackage{style_tree}
 \usepackage{style_automata}
 
+\usetikzlibrary{external}
+\tikzexternalize[prefix=src/tikz-cache/, optimize command away=\inputminted]
+
 \graphicspath{%
 	{./chapters/titlepage/images/}%
 	% {./chapters/preface/assets/images/}%
